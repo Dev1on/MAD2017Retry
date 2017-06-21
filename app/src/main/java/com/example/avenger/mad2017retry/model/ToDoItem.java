@@ -14,7 +14,7 @@ public class ToDoItem {
     private int id;
     private String name;
     private String description;
-    private boolean done;
+    private Status status;
     private boolean favorite;
 
     private List<String> contacts;
@@ -49,12 +49,12 @@ public class ToDoItem {
         this.description = description;
     }
 
-    public boolean isDone() {
-        return done;
+    public Status getStatus() {
+        return status;
     }
 
-    public void setDone(boolean done) {
-        this.done = done;
+    public void setStatus(Status status) {
+        this.status = status;
     }
 
     public boolean isFavorite() {
