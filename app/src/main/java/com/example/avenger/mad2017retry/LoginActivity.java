@@ -17,6 +17,8 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
     private EditText password;
     private LoginPresenter presenter;
 
+    // TODO disable login Button if both fields empty
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,7 +34,6 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
                 presenter.validateCredentials(email.getText().toString(), password.getText().toString());
             }
         });
-
     }
 
     @Override
@@ -61,7 +62,7 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
 
     @Override
     public void navigateToHome() {
-        startActivity(new Intent(this, MainActivity.class));
+        startActivity(new Intent(this, ToDoListActivity.class));
         finish();
     }
 }
