@@ -1,5 +1,10 @@
 package com.example.avenger.mad2017retry.presenter;
 
+import android.accessibilityservice.AccessibilityService;
+import android.app.Application;
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.text.TextUtils;
 
 import com.example.avenger.mad2017retry.view.LoginView;
@@ -11,9 +16,11 @@ import com.example.avenger.mad2017retry.view.LoginView;
 public class LoginPresenter {
 
     private LoginView loginView;
+    private Application app;
 
-    public LoginPresenter(LoginView aLoginView) {
+    public LoginPresenter(LoginView aLoginView, Application app) {
         this.loginView = aLoginView;
+        this.app = app;
     }
 
     public void validateCredentials(String anEmail, String aPassword) {
@@ -61,4 +68,11 @@ public class LoginPresenter {
             loginView.navigateToHome();
         }
     }
+
+    public boolean isOnline() {
+        ConnectivityManager cm = (ConnectivityManager) app.getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
+    }
+
 }
