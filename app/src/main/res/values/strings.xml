@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">MAD2017Retry</string>
+    <string name="title_activity_main">Do-It</string>
+
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="log_in">Login</string>
+    <string name="email_error">Ungültige Email!</string>
+    <string name="password_error">Ungültiges Password!</string>
+</resources>
