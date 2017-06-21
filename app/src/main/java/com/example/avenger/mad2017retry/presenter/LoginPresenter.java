@@ -25,46 +25,38 @@ public class LoginPresenter {
     }
 
     private void login(String anEmail, String aPassword) {
-       boolean tmpError = false;
-
         if (TextUtils.isEmpty(anEmail)) {
             onEmailError();
-            tmpError = true;
             return;
         }
 
-        if (TextUtils.isEmpty(aPassword)) {
+        if (TextUtils.isEmpty(aPassword) || aPassword.length() != 6) {
             onPasswordError();
-            tmpError = true;
             return;
         }
 
-        // TODO check User
-
-        if (!tmpError) {
-            onSuccess();
-        }
+        onSuccess();
     }
 
     public void onDestroy() {
         loginView = null;
     }
 
-    public void onEmailError() {
+    private void onEmailError() {
         if(loginView != null) {
             loginView.setEmailError();
             loginView.hideProgress();
         }
     }
 
-    public void onPasswordError() {
+    private void onPasswordError() {
         if(loginView != null) {
             loginView.setPasswordError();
             loginView.hideProgress();
         }
     }
 
-    public void onSuccess() {
+    private void onSuccess() {
         if(loginView != null) {
             loginView.navigateToHome();
         }
