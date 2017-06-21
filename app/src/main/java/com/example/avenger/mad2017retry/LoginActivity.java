@@ -51,12 +51,6 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
 
     }
 
-    @Override
-    protected void onDestroy() {
-        presenter.onDestroy();
-        super.onDestroy();
-    }
-
     public void showProgress() {
         progressBar.setVisibility(View.VISIBLE);
     }
@@ -79,5 +73,11 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
     public void navigateToHome() {
         startActivity(new Intent(this, ToDoListActivity.class));
         finish();
+    }
+
+    @Override
+    protected void onDestroy() {
+        presenter.onDestroy();
+        super.onDestroy();
     }
 }
