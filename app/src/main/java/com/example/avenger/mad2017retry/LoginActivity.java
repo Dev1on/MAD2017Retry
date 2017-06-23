@@ -5,16 +5,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 
 import com.example.avenger.mad2017retry.presenter.LoginPresenter;
 import com.example.avenger.mad2017retry.view.LoginView;
-
-import java.net.MalformedURLException;
-import java.net.URL;
 
 public class LoginActivity extends AppCompatActivity implements LoginView {
 
@@ -32,14 +28,16 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        app = getApplication();
-        presenter = new LoginPresenter(this, app );
+        Object systemService = getApplication().getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        presenter = new LoginPresenter(this, systemService);
 
         findViewById(R.id.login_button).setEnabled(false);
 
-
-        if(presenter.isOnline()) {
-            if (!presenter.isDbOnline()) {
+        // check if internet connection is available
+        if(presenter.isInternetConnectionAvailable()) {
+            // check if WebApplication is available
+            if (!presenter.isWebApplicationAvailable()) {
                 progressBar = (ProgressBar) findViewById(R.id.progress);
                 email = (EditText) findViewById(R.id.email);
                 password = (EditText) findViewById(R.id.password);
@@ -49,18 +47,17 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
                     }
                 });
 
-                //Set variable for CRUD Operations online
+                // TODO set variable for CRUD Operations online
             } else {
-                //show toast with database not accessible
-                //set variable for CRUD Operations offline
+                // TODO show toast with webapplication not available
+                // TODO set variable for CRUD Operations offline
                 navigateToHome();
             }
         } else {
+            // if WebApplication is unavailable redirect immediately to home
             navigateToHome();
-            //set variable for CRUD Operations offline
+            // TODO set variable for CRUD Operations offline
         }
-
-
 
     }
 
