@@ -8,14 +8,23 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.avenger.mad2017retry.database.DBApplication;
+import com.example.avenger.mad2017retry.database.ICRUDOperationsAsync;
+import com.example.avenger.mad2017retry.model.ToDoItem;
 import com.example.avenger.mad2017retry.presenter.ToDoDetailPresenter;
 import com.example.avenger.mad2017retry.presenter.ToDoListPresenter;
 import com.example.avenger.mad2017retry.view.ToDoDetailView;
 import com.example.avenger.mad2017retry.view.ToDoListView;
 
+import static android.R.attr.id;
+
 public class ToDoDetailActivity extends AppCompatActivity implements ToDoDetailView {
 
     private ToDoDetailPresenter presenter;
+
+    private ICRUDOperationsAsync crudOperations;
+
+    //TODO load all elements
 
 
 
@@ -26,12 +35,25 @@ public class ToDoDetailActivity extends AppCompatActivity implements ToDoDetailV
 
         presenter = new ToDoDetailPresenter(this);
 
-
+        //getting the application scoped DBApplication
+        crudOperations = ((DBApplication)getApplication()).getCrudOperations();
     }
 
 
+    //TODO implement methods to save items etc
     @Override
     public void saveItem() {
+
+
+        /*
+
+        crudOperations.updateToDo(itemId, item, new ICRUDOperationsAsync.CallbackFunction<ToDoItem>() {
+            @Override
+            public void process(ToDoItem result) {
+
+            }
+        });
+        */
 
     }
 

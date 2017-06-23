@@ -3,6 +3,8 @@ package com.example.avenger.mad2017retry;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
+import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -33,6 +35,12 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
         presenter = new LoginPresenter(this, systemService);
 
         findViewById(R.id.login_button).setEnabled(false);
+
+
+        //TODO change the policy change to async task
+        //set policy to all because of thread problem
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
 
         // check Internet connection and WebApplication availability
         if (presenter.isInternetConnectionAvailable() && presenter.isWebApplicationAvailable()) {
