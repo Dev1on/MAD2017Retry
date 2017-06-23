@@ -34,31 +34,23 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
 
         findViewById(R.id.login_button).setEnabled(false);
 
-        // check if internet connection is available
-        if(presenter.isInternetConnectionAvailable()) {
-            // check if WebApplication is available
-            if (!presenter.isWebApplicationAvailable()) {
-                progressBar = (ProgressBar) findViewById(R.id.progress);
-                email = (EditText) findViewById(R.id.email);
-                password = (EditText) findViewById(R.id.password);
-                findViewById(R.id.login_button).setOnClickListener(new View.OnClickListener() {
-                    public void onClick(View v) {
-                        presenter.validateCredentials(email.getText().toString(), password.getText().toString());
-                    }
-                });
+        // check Internet connection and WebApplication availability
+        if (presenter.isInternetConnectionAvailable() && presenter.isWebApplicationAvailable()) {
+            progressBar = (ProgressBar) findViewById(R.id.progress);
+            email = (EditText) findViewById(R.id.email);
+            password = (EditText) findViewById(R.id.password);
+            findViewById(R.id.login_button).setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    presenter.validateCredentials(email.getText().toString(), password.getText().toString());
+                }
+            });
 
-                // TODO set variable for CRUD Operations online
-            } else {
-                // TODO show toast with webapplication not available
-                // TODO set variable for CRUD Operations offline
-                navigateToHome();
-            }
+            // TODO set ExternalDatabaseManager
         } else {
-            // if WebApplication is unavailable redirect immediately to home
+            // skip login
             navigateToHome();
-            // TODO set variable for CRUD Operations offline
+            // TODO set LocalDatabaseManager
         }
-
     }
 
     public void showProgress() {
