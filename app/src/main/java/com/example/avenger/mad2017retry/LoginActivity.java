@@ -47,10 +47,10 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
 
             // TODO set ExternalDatabaseManager
         } else {
-            // skip login
             // TODO show Toast WebApp unavailable
             // TODO set LocalDatabaseManager
 
+            // skip login
             navigateToHome();
         }
     }
