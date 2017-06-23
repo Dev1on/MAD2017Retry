@@ -1,8 +1,11 @@
 package com.example.avenger.mad2017retry;
 
+import android.app.Application;
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -10,7 +13,12 @@ import android.widget.ProgressBar;
 import com.example.avenger.mad2017retry.presenter.LoginPresenter;
 import com.example.avenger.mad2017retry.view.LoginView;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+
 public class LoginActivity extends AppCompatActivity implements LoginView {
+
+    private static Application app;
 
     private ProgressBar progressBar;
     private EditText email;
@@ -24,16 +32,36 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        presenter = new LoginPresenter(this);
+        app = getApplication();
+        presenter = new LoginPresenter(this, app );
 
-        progressBar = (ProgressBar) findViewById(R.id.progress);
-        email = (EditText) findViewById(R.id.email);
-        password = (EditText) findViewById(R.id.password);
-        findViewById(R.id.login_button).setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                presenter.validateCredentials(email.getText().toString(), password.getText().toString());
+        findViewById(R.id.login_button).setEnabled(false);
+
+
+        if(presenter.isOnline()) {
+            if (!presenter.isDbOnline()) {
+                progressBar = (ProgressBar) findViewById(R.id.progress);
+                email = (EditText) findViewById(R.id.email);
+                password = (EditText) findViewById(R.id.password);
+                findViewById(R.id.login_button).setOnClickListener(new View.OnClickListener() {
+                    public void onClick(View v) {
+                        presenter.validateCredentials(email.getText().toString(), password.getText().toString());
+                    }
+                });
+
+                //Set variable for CRUD Operations online
+            } else {
+                //show toast with database not accessible
+                //set variable for CRUD Operations offline
+                navigateToHome();
             }
-        });
+        } else {
+            navigateToHome();
+            //set variable for CRUD Operations offline
+        }
+
+
+
     }
 
     public void showProgress() {
