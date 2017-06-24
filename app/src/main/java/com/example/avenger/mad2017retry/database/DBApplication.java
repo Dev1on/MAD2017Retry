@@ -13,6 +13,9 @@ public class DBApplication extends Application  {
 
     private ICRUDOperationsAsync crudOperations;
 
+
+    //TODO implement a Map where all read items are stored. just do a recheck when doing actions. performance reasons
+
     /*TODO we need an application scoped class which contains depending on the connection
         to create a local or remote crudoperations.
     */

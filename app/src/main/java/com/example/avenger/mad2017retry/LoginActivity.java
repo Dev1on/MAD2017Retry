@@ -16,8 +16,6 @@ import com.example.avenger.mad2017retry.view.LoginView;
 
 public class LoginActivity extends AppCompatActivity implements LoginView {
 
-    private static Application app;
-
     private ProgressBar progressBar;
     private EditText email;
     private EditText password;
