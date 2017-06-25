@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.EditText;
 
 import com.example.avenger.mad2017retry.database.DBApplication;
@@ -36,7 +37,7 @@ public class ToDoDetailActivity extends AppCompatActivity implements ToDoDetailV
         //set data of ui elements
 
         //TODO we will get the id of the item, so we need to read the item from the map or the database
-        long itemId = (long) getIntent().getSerializableExtra("itemId");
+        long itemId = (long) getIntent().getSerializableExtra("id");
         todo = presenter.readToDo(itemId);
         if (todo != null) {
             nameText.setText(todo.getName());
