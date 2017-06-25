@@ -9,6 +9,7 @@ import static android.R.attr.id;
 
 public class ToDoDetailPresenter {
 
+    // TODO use
     private ToDoDetailView toDoDetailView;
 
     private ICRUDOperationsAsync crudOperations;
