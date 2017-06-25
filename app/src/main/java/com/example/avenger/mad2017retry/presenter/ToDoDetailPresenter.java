@@ -1,5 +1,7 @@
 package com.example.avenger.mad2017retry.presenter;
 
+import android.util.Log;
+
 import com.example.avenger.mad2017retry.database.DBApplication;
 import com.example.avenger.mad2017retry.database.ICRUDOperationsAsync;
 import com.example.avenger.mad2017retry.model.Todo;
@@ -21,11 +23,11 @@ public class ToDoDetailPresenter {
     }
 
     public void saveItem() {
-        crudOperations.updateToDo(id, this.todo, new ICRUDOperationsAsync.CallbackFunction<Todo>() {
-            @Override
-            public void process(Todo result) {
+        Todo newTodo = toDoDetailView.getCurrentTodo();
 
-            }
+        crudOperations.updateToDo(todo.getId(), newTodo, result -> {
+            setTodo(result);
+            toDoDetailView.setTodoView(result);
         });
     }
 
@@ -34,9 +36,22 @@ public class ToDoDetailPresenter {
         //if yes read the item out of the map, if not then use the crudOperations to read from db
 
         crudOperations.readToDo(id, result -> {
-            setTodo(result);
-            toDoDetailView.setTodoView(result);
+            Log.i("detailpresenter", "Reuslt is: " + result);
+
+            if(result.getId() == 0) {
+                toDoDetailView.displayTodoNotFound();
+            } else {
+                setTodo(result);
+                toDoDetailView.setTodoView(result);
+            }
         });
+    }
+
+    public void deleteTodo(long id) {
+        crudOperations.deleteToDo(id, result -> {
+            //do nothing
+        });
+
     }
 
     public void onDestroy() {

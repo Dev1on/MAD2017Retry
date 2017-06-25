@@ -51,9 +51,9 @@ public class DBApplication extends Application  {
             newItem3.setFavourite(true);
             newItem3.setLocation(new Todo.Location("Warschau", new Todo.LatLng(2,3)));
 
-            crudOperations.createToDo(newItem1, (Todo result) -> Log.d(logger, "Item 1 created."));
-            crudOperations.createToDo(newItem2, (Todo result) -> Log.d(logger, "Item 2 created."));
-            crudOperations.createToDo(newItem3, (Todo result) -> Log.d(logger, "Item 3 created."));
+            crudOperations.createToDo(newItem1, (Todo result) -> Log.d(logger, "Item 1 created with id: " + result.getId()));
+            crudOperations.createToDo(newItem2, (Todo result) -> Log.d(logger, "Item 2 created with id: " + result.getId()));
+            crudOperations.createToDo(newItem3, (Todo result) -> Log.d(logger, "Item 3 created with id: " + result.getId()));
         }
 
 

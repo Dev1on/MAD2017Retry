@@ -10,8 +10,10 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.example.avenger.mad2017retry.database.DBApplication;
 import com.example.avenger.mad2017retry.presenter.ToDoDetailPresenter;
@@ -55,6 +57,7 @@ public class ToDoDetailActivity extends AppCompatActivity implements ToDoDetailV
 
 
 
+
         initializeScreen();
     }
 
@@ -62,24 +65,28 @@ public class ToDoDetailActivity extends AppCompatActivity implements ToDoDetailV
         progressDialog.show();
         long itemId = (long) getIntent().getSerializableExtra("id");
         presenter.readToDo(itemId);
+
     }
 
 
     @Override
     public void saveItem() {
+        progressDialog.show();
         presenter.saveItem();
+        progressDialog.dismiss();
 
-        Intent returnIntent = new Intent();
-        Todo item = new Todo(nameText.getText().toString(), descriptionText.getText().toString());
-        returnIntent.putExtra("item", item);
-
-        setResult(Activity.RESULT_OK, returnIntent);
-        finish();
+        Toast.makeText(this, "Todo saved", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void deleteItem() {
+        presenter.deleteTodo((long) getIntent().getSerializableExtra("id"));
 
+        Toast.makeText(this, "Todo deleted", Toast.LENGTH_SHORT).show();
+
+        Intent returnIntent = new Intent();
+        setResult(Activity.RESULT_OK, returnIntent);
+        finish();
     }
 
     @Override
@@ -115,10 +122,46 @@ public class ToDoDetailActivity extends AppCompatActivity implements ToDoDetailV
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_delete) {
+            deleteItem();
+            return true;
+        } else if(item.getItemId() == R.id.action_save) {
+            saveItem();
             return true;
         } else {
             return super.onOptionsItemSelected(item);
         }
+    }
+
+    public Todo getCurrentTodo() {
+        String name = nameText.getText().toString();
+        String description = descriptionText.getText().toString();
+        boolean favourite = favouriteBox.isChecked();
+        boolean done = doneBox.isChecked();
+        String location_name = locationText.getText().toString();
+
+        //TODO location
+        Todo.Location location = new Todo.Location();
+        Todo.LatLng latlng = new Todo.LatLng();
+        latlng.setLat(12);
+        latlng.setLng(13);
+        location.setLatlng(latlng);
+        location.setName(location_name);
+        //TODO save contacts
+
+        Todo returnTodo = new Todo(name, description);
+        returnTodo.setFavourite(favourite);
+        returnTodo.setDone(done);
+        returnTodo.setLocation(location);
+
+        return returnTodo;
+    }
+
+    public void displayTodoNotFound() {
+        Toast.makeText(this, "Sorry, Todo not found", Toast.LENGTH_SHORT).show();
+
+        Intent returnIntent = new Intent();
+        setResult(Activity.RESULT_OK, returnIntent);
+        finish();
     }
 
 }
