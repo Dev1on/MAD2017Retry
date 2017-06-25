@@ -3,13 +3,14 @@ package com.example.avenger.mad2017retry.model;
 
 import android.location.Location;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by Avenger on 21.06.17.
  */
 
-public class ToDoItem {
+public class ToDoItem implements Serializable{
 
     private int id;
     private String name;
