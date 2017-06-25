@@ -18,9 +18,11 @@ import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
 
+
 public class RemoteCRUDOperationsImpl implements ICRUDOperationsAsync {
 
     private static String WEB_API_BASE_URL = "http://localhost:8080/";
+    protected static String logger = RemoteCRUDOperationsImpl.class.getSimpleName();
 
     //inner interface to define webapi calls to given remote database application
     public interface ICRUDWebApi {
@@ -60,7 +62,7 @@ public class RemoteCRUDOperationsImpl implements ICRUDOperationsAsync {
                 try {
                     return webAPI.createToDoItem(params[0]).execute().body();
                 } catch (IOException e) {
-                    Log.d("RemoteCRUDOperationsImpl", "Item not created.");
+                    Log.d(logger, "Item not created.");
                     e.printStackTrace();
                 }
                 return null;
@@ -81,7 +83,7 @@ public class RemoteCRUDOperationsImpl implements ICRUDOperationsAsync {
                 try {
                     return webAPI.readAllToDoItems().execute().body();
                 } catch (IOException e) {
-                    Log.d("RemoteCRUDOperationsImpl", "Could not read all items.");
+                    Log.d(logger, "Could not read all items.");
                     e.printStackTrace();
                 }
                 return null;
@@ -103,7 +105,7 @@ public class RemoteCRUDOperationsImpl implements ICRUDOperationsAsync {
                 try {
                     return webAPI.readToDoItem(params[0]).execute().body();
                 } catch (IOException e) {
-                    Log.d("RemoteCRUDOperationsImpl", "Could not read item with id: " + params[0]);
+                    Log.d(logger, "Could not read item with id: " + params[0]);
                     e.printStackTrace();
                 }
                 return null;
@@ -117,20 +119,36 @@ public class RemoteCRUDOperationsImpl implements ICRUDOperationsAsync {
     }
 
     @Override
-    public void updateToDo(long id, Todo item, final CallbackFunction<Todo> callback) {
-        //TODO implement remote updateToDo method with asynctask
+    public void updateToDo(long id, final Todo item, final CallbackFunction<Todo> callback) {
+        new AsyncTask<Long, Void, Todo>() {
+
+            @Override
+            protected Todo doInBackground(Long... params) {
+                try {
+                    return webAPI.updateToDoItem(params[0], item).execute().body();
+                } catch (IOException e) {
+                    Log.d(logger, "Could not update item with id: " + params[0]);
+                    e.printStackTrace();
+                }
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Todo todo) {
+                callback.process(todo);
+            }
+        }.execute(id);
     }
 
     @Override
     public void deleteToDo(long id, final CallbackFunction<Boolean> callback) {
         new AsyncTask<Long, Void, Boolean>() {
-
             @Override
             protected Boolean doInBackground(Long... params) {
                 try {
                     return webAPI.deleteToDoItem(params[0]).execute().body();
                 } catch (IOException e) {
-                    Log.d("RemoteCRUDOperationsImpl", "Could not delete item with id: " + params[0]);
+                    Log.d(logger, "Could not delete item with id: " + params[0]);
                     e.printStackTrace();
                 }
                 return false;
