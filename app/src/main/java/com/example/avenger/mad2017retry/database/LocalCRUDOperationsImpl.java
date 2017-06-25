@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.example.avenger.mad2017retry.model.Todo;
 
@@ -27,6 +28,7 @@ public class LocalCRUDOperationsImpl implements ICRUDOperationsAsync {
             db.execSQL("CREATE TABLE CONTACTS (ID INTEGER PRIMARY KEY, NAME TEXT, NUMBER TEXT)");
             db.execSQL("CREATE TABLE TODOSCONTACTS (TODOID INTEGER REFERENCES TODOS(ID), CONTACTID INTEGER REFERENCES CONTACTS(ID), PRIMARY KEY(TODOSID, CONTACTID))");
         }
+        db.execSQL("delete from "+ DB_NAME);
     }
 
     @Override
@@ -37,6 +39,8 @@ public class LocalCRUDOperationsImpl implements ICRUDOperationsAsync {
                 ContentValues values = setContentValuesForTodo(item);
                 long id = db.insertOrThrow(DB_NAME, null, values);
                 item.setId((int) id);
+
+                Log.i("LocalCRUD","id is: " + id + " and name is: " + item.getName());
 
                 return item;
             }
@@ -56,7 +60,7 @@ public class LocalCRUDOperationsImpl implements ICRUDOperationsAsync {
             protected List<Todo> doInBackground(Void... params) {
                 List<Todo> todoList = new ArrayList<>();
 
-                Cursor cursor = db.query(DB_NAME, new String[]{"ID", "NAME", "DESCRIPTION", "EXPIRY", "DONE", "FAVOURITE", "LAENGENGRAD", "BREITENGRAD"},null,null,null,null,"ID");
+                Cursor cursor = db.query(DB_NAME, new String[]{"ID", "NAME", "DESCRIPTION", "EXPIRY", "DONE", "FAVOURITE", "LAENGENGRAD", "BREITENGRAD", "LOCATIONNAME"},null,null,null,null,"ID");
                 if(cursor.getCount() > 0) {
                     cursor.moveToFirst();
                     boolean next;
@@ -83,13 +87,15 @@ public class LocalCRUDOperationsImpl implements ICRUDOperationsAsync {
         new AsyncTask<Long, Void, Todo>() {
             @Override
             protected Todo doInBackground(Long... params) {
-                Cursor cursor = db.query(DB_NAME, new String[]{"ID", "NAME", "DESCRIPTION", "EXPIRY", "DONE", "FAVOURITE", "LAENGENGRAD", "BREITENGRAD"},null,null,null,null,"ID");
+                Cursor cursor = db.query(DB_NAME, new String[]{"ID", "NAME", "DESCRIPTION", "EXPIRY", "DONE", "FAVOURITE", "LAENGENGRAD", "BREITENGRAD", "LOCATIONNAME"},null,null,null,null,"ID");
                 Todo returnItem = new Todo("Name", "Description");
                 if(cursor.getCount() > 0) {
                     cursor.moveToFirst();
                     boolean next = false;
                     do {
+                        Log.i("LocalCRUD","id is in schleife: " + cursor.getLong(cursor.getColumnIndex("ID")) + " and search id is: " + id);
                         if (cursor.getLong(cursor.getColumnIndex("ID")) == id) {
+                            Log.i("LocalCRUD","Found item!");
                             returnItem = setTodoFromDB(cursor);
                             break;
                         }

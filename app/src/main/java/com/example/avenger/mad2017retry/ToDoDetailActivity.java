@@ -1,6 +1,7 @@
 package com.example.avenger.mad2017retry;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -16,12 +17,13 @@ import com.example.avenger.mad2017retry.model.Todo;
 public class ToDoDetailActivity extends AppCompatActivity implements ToDoDetailView {
 
     private ToDoDetailPresenter presenter;
-    private Todo todo;
 
     //TODO load all ui elements
     private EditText nameText;
     private EditText descriptionText;
     private EditText statusText;
+
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,21 +36,21 @@ public class ToDoDetailActivity extends AppCompatActivity implements ToDoDetailV
         descriptionText = (EditText) findViewById(R.id.descriptionTextDetail);
         statusText = (EditText) findViewById(R.id.statusTextDetail);
 
-        //set data of ui elements
+        progressDialog = new ProgressDialog(this);
 
-        //TODO we will get the id of the item, so we need to read the item from the map or the database
-        long itemId = (long) getIntent().getSerializableExtra("id");
-        todo = presenter.readToDo(itemId);
-        if (todo != null) {
-            nameText.setText(todo.getName());
-            descriptionText.setText(todo.getDescription());
-            statusText.setText("" + todo.isDone());
-        }
+        initializeScreen();
     }
+
+    private void initializeScreen() {
+        progressDialog.show();
+        long itemId = (long) getIntent().getSerializableExtra("id");
+        presenter.readToDo(itemId);
+    }
+
 
     @Override
     public void saveItem() {
-        presenter.saveItem(this.todo);
+        presenter.saveItem();
 
         Intent returnIntent = new Intent();
         Todo item = new Todo(nameText.getText().toString(), descriptionText.getText().toString());
@@ -64,8 +66,14 @@ public class ToDoDetailActivity extends AppCompatActivity implements ToDoDetailV
     }
 
     @Override
-    public void readItem() {
+    public void setTodoView(Todo todo) {
+        nameText.setText(todo.getName());
+        descriptionText.setText(todo.getDescription());
+        statusText.setText("" + todo.isDone());
 
+        //TODO add all views
+
+        progressDialog.hide();
     }
 
     @Override
@@ -78,4 +86,5 @@ public class ToDoDetailActivity extends AppCompatActivity implements ToDoDetailV
         presenter.onDestroy();
         super.onDestroy();
     }
+
 }

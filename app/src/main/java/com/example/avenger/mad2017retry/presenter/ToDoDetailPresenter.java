@@ -1,5 +1,7 @@
 package com.example.avenger.mad2017retry.presenter;
 
+import android.util.Log;
+
 import com.example.avenger.mad2017retry.database.DBApplication;
 import com.example.avenger.mad2017retry.database.ICRUDOperationsAsync;
 import com.example.avenger.mad2017retry.view.ToDoDetailView;
@@ -14,6 +16,8 @@ public class ToDoDetailPresenter {
 
     private ICRUDOperationsAsync crudOperations;
 
+    private Todo todo;
+
     public ToDoDetailPresenter(ToDoDetailView aToDoDetailView, DBApplication application) {
         this.toDoDetailView = aToDoDetailView;
 
@@ -21,8 +25,8 @@ public class ToDoDetailPresenter {
         crudOperations = application.getCrudOperations();
     }
 
-    public void saveItem(Todo item) {
-        crudOperations.updateToDo(id, item, new ICRUDOperationsAsync.CallbackFunction<Todo>() {
+    public void saveItem() {
+        crudOperations.updateToDo(id, this.todo, new ICRUDOperationsAsync.CallbackFunction<Todo>() {
             @Override
             public void process(Todo result) {
 
@@ -30,23 +34,21 @@ public class ToDoDetailPresenter {
         });
     }
 
-    public Todo readToDo(long id) {
+    public void readToDo(long id) {
         //First of all let application check if there is a item with the given id.
         //if yes read the item out of the map, if not then use the crudOperations to read from db
 
-        final Todo[] returnItem = new Todo[1];
-        crudOperations.readToDo(id, new ICRUDOperationsAsync.CallbackFunction<Todo>() {
-            @Override
-            public void process(Todo result) {
-                returnItem[0] = result;
-            }
+        crudOperations.readToDo(id, result -> {
+            setTodo(result);
+            toDoDetailView.setTodoView(result);
         });
-
-
-        return returnItem[0];
     }
 
     public void onDestroy() {
         toDoDetailView = null;
+    }
+
+    private void setTodo(Todo item) {
+        this.todo = item;
     }
 }
