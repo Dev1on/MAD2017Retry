@@ -25,8 +25,8 @@ public class ToDoDetailPresenter {
         crudOperations = application.getCrudOperations();
     }
 
-    public void saveItem() {
-        crudOperations.updateToDo(id, new ToDoItem("BLA"), new ICRUDOperationsAsync.CallbackFunction<ToDoItem>() {
+    public void saveItem(ToDoItem item) {
+        crudOperations.updateToDo(id, item, new ICRUDOperationsAsync.CallbackFunction<ToDoItem>() {
             @Override
             public void process(ToDoItem result) {
 

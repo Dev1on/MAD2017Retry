@@ -3,29 +3,23 @@ package com.example.avenger.mad2017retry;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.EditText;
 
 import com.example.avenger.mad2017retry.database.DBApplication;
-import com.example.avenger.mad2017retry.database.ICRUDOperationsAsync;
 import com.example.avenger.mad2017retry.model.ToDoItem;
 import com.example.avenger.mad2017retry.presenter.ToDoDetailPresenter;
-import com.example.avenger.mad2017retry.presenter.ToDoListPresenter;
 import com.example.avenger.mad2017retry.view.ToDoDetailView;
-import com.example.avenger.mad2017retry.view.ToDoListView;
 
-import java.io.Serializable;
 
-import static android.R.attr.id;
 
 public class ToDoDetailActivity extends AppCompatActivity implements ToDoDetailView {
 
     private ToDoDetailPresenter presenter;
+
+
+    private ToDoItem item;
+
 
     //TODO load all ui elements
     private EditText nameText;
@@ -51,7 +45,7 @@ public class ToDoDetailActivity extends AppCompatActivity implements ToDoDetailV
 
 
         long itemId = (long) getIntent().getSerializableExtra("itemId");
-        ToDoItem item = presenter.readToDoItem(itemId);
+        item = presenter.readToDoItem(itemId);
         if (item != null) {
             nameText.setText(item.getName());
             descriptionText.setText(item.getDescription());
@@ -66,7 +60,7 @@ public class ToDoDetailActivity extends AppCompatActivity implements ToDoDetailV
     //TODO implement methods to save items etc
     @Override
     public void saveItem() {
-        presenter.saveItem();
+        presenter.saveItem(this.item);
 
         Intent returnIntent = new Intent();
         ToDoItem item = new ToDoItem(nameText.getText().toString());
