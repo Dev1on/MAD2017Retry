@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
+import android.support.annotation.NonNull;
 
 import com.example.avenger.mad2017retry.model.Todo;
 
@@ -22,7 +23,6 @@ public class LocalCRUDOperationsImpl implements ICRUDOperationsAsync {
         db = context.openOrCreateDatabase("mydb.sqlite", Context.MODE_PRIVATE, null);
         if (db.getVersion() == 0) {
             db.setVersion(1);
-
             db.execSQL("CREATE TABLE " + DB_NAME + " (ID INTEGER PRIMARY KEY, NAME TEXT, DESCRIPTION TEXT, EXPIRY INTEGER, DONE INTEGER, FAVOURITE INTEGER, LAENGENGRAD INTEGER, BREITENGRAD INTEGER, LOCATIONNAME TEXT)");
             db.execSQL("CREATE TABLE CONTACTS (ID INTEGER PRIMARY KEY, NAME TEXT, NUMBER TEXT)");
             db.execSQL("CREATE TABLE TODOSCONTACTS (TODOID INTEGER REFERENCES TODOS(ID), CONTACTID INTEGER REFERENCES CONTACTS(ID), PRIMARY KEY(TODOSID, CONTACTID))");
@@ -34,17 +34,7 @@ public class LocalCRUDOperationsImpl implements ICRUDOperationsAsync {
         new AsyncTask<Todo, Void, Todo>() {
             @Override
             protected Todo doInBackground(Todo... params) {
-                ContentValues values = new ContentValues();
-                values.put("NAME", item.getName());
-                values.put("DESCRIPTION", item.getDescription());
-                //values.put("EXPIRY", item.getExpiry());
-                //values.put("DONE", item.getDone());
-                //values.put("FAVOURITE", item.getFavourite());
-                //values.put("LAENGENGRAD", item.getLocation().getLatLng().getLat());
-                //values.put("BREITENGRAD", item.getLocation().getLatLng().getLng());
-                //values.put("LOCATIONNAME", item.getLocation().getName());
-                //TODO add contacts to db
-
+                ContentValues values = setContentValuesForTodo(item);
                 long id = db.insertOrThrow(DB_NAME, null, values);
                 item.setId((int) id);
 
@@ -58,6 +48,7 @@ public class LocalCRUDOperationsImpl implements ICRUDOperationsAsync {
         }.execute(item);
     }
 
+
     @Override
     public void readAllToDos(final CallbackFunction<List<Todo>> callback) {
         new AsyncTask<Void, Void, List<Todo>>() {
@@ -70,38 +61,9 @@ public class LocalCRUDOperationsImpl implements ICRUDOperationsAsync {
                     cursor.moveToFirst();
                     boolean next;
                     do {
-                        Todo todo = new Todo("Name", "Description");
-
-                        long id = cursor.getLong(cursor.getColumnIndex("ID"));
-                        String name = cursor.getString(cursor.getColumnIndex("NAME"));
-                        String description = cursor.getString(cursor.getColumnIndex("DESCRIPTION"));
-                        long expiry = cursor.getLong(cursor.getColumnIndex("EXPIRY"));
-                        boolean done = (cursor.getInt(cursor.getColumnIndex("DONE")))== 1 ? true : false;
-                        boolean favourite = (cursor.getInt(cursor.getColumnIndex("FAVOURITE")))== 1 ? true : false;
-
-                        long lat = cursor.getLong(cursor.getColumnIndex("LAENGENGRAD"));
-                        long lng = cursor.getLong(cursor.getColumnIndex("BREITENGRAD"));
-                        String location_name = cursor.getString(cursor.getColumnIndex("LOCATIONNAME"));
-                        Todo.Location location = new Todo.Location(location_name, new Todo.LatLng(lat,lng));
-
-                        //TODO read out all contacts
-                        List<String> contacts = new ArrayList<String>();
-
-
-                        todo.setId((int) id);
-                        todo.setName(name);
-                        todo.setDescription(description);
-                        //todo.setExpiry(expiry);
-                        //todo.setDone(done);
-                        //todo.setFavourite(favourite);
-                        //todo.setLocation(location);
-                        //todo.setContacts(contacts);
-
-
-
+                        Todo todo = setTodoFromDB(cursor);
                         todoList.add(todo);
                         next = cursor.moveToNext();
-
                     } while (next);
                 }
                 cursor.close();
@@ -128,20 +90,13 @@ public class LocalCRUDOperationsImpl implements ICRUDOperationsAsync {
                     boolean next = false;
                     do {
                         if (cursor.getLong(cursor.getColumnIndex("ID")) == id) {
-
-                            returnItem.setId((int) cursor.getLong(cursor.getColumnIndex("ID")));
-                            returnItem.setName(cursor.getString(cursor.getColumnIndex("NAME")));
-                            returnItem.setDescription(cursor.getString(cursor.getColumnIndex("DESCRIPTION")));
-                            //TODO implement rest of setting attributes from db
-
-
+                            returnItem = setTodoFromDB(cursor);
                             break;
                         }
                         next = cursor.moveToNext();
                     } while (next);
                 }
                 return returnItem;
-
             }
 
             @Override
@@ -153,16 +108,14 @@ public class LocalCRUDOperationsImpl implements ICRUDOperationsAsync {
     }
 
     @Override
-    public void updateToDo(long id, Todo item, final CallbackFunction<Todo> callback) {
-
-        //TODO implement local updateToDo method
-
+    public void updateToDo(final long id, final Todo item, final CallbackFunction<Todo> callback) {
         new AsyncTask<Long, Void, Todo>() {
             @Override
             protected Todo doInBackground(Long... params) {
-
-                //int rowsAffected = db.update(DB_NAME, values, "ID=?", new String[]{String.valueOf(id)} );
-
+                ContentValues values = setContentValuesForTodo(item);
+                int rowsAffected = db.update(DB_NAME, values, "ID=?", new String[]{String.valueOf(id)} );
+                if (rowsAffected > 0)
+                   return item;
                 return null;
             }
 
@@ -181,7 +134,6 @@ public class LocalCRUDOperationsImpl implements ICRUDOperationsAsync {
                 int rowsAffected = db.delete(DB_NAME, "ID=?", new String[]{String.valueOf(id)});
                 if (rowsAffected > 0)
                     return true;
-
                 return false;
             }
 
@@ -190,5 +142,48 @@ public class LocalCRUDOperationsImpl implements ICRUDOperationsAsync {
                 callback.process(aBoolean);
             }
         }.execute(id);
+    }
+
+    @NonNull
+    private Todo setTodoFromDB(Cursor cursor) {
+        long id = cursor.getLong(cursor.getColumnIndex("ID"));
+        String name = cursor.getString(cursor.getColumnIndex("NAME"));
+        String description = cursor.getString(cursor.getColumnIndex("DESCRIPTION"));
+        long expiry = cursor.getLong(cursor.getColumnIndex("EXPIRY"));
+        boolean done = (cursor.getInt(cursor.getColumnIndex("DONE")))== 1 ? true : false;
+        boolean favourite = (cursor.getInt(cursor.getColumnIndex("FAVOURITE")))== 1 ? true : false;
+        long lat = cursor.getLong(cursor.getColumnIndex("LAENGENGRAD"));
+        long lng = cursor.getLong(cursor.getColumnIndex("BREITENGRAD"));
+        String location_name = cursor.getString(cursor.getColumnIndex("LOCATIONNAME"));
+        Todo.Location location = new Todo.Location(location_name, new Todo.LatLng(lat,lng));
+
+        //TODO read out all contacts
+        List<String> contacts = new ArrayList<String>();
+
+        Todo todo = new Todo(name, description);
+        todo.setId((int) id);
+        todo.setExpiry(expiry);
+        todo.setDone(done);
+        todo.setFavourite(favourite);
+        todo.setLocation(location);
+        todo.setContacts(contacts);
+        return todo;
+    }
+
+    @NonNull
+    private ContentValues setContentValuesForTodo(Todo item) {
+        ContentValues values = new ContentValues();
+        values.put("NAME", item.getName());
+        values.put("DESCRIPTION", item.getDescription());
+        values.put("EXPIRY", item.getExpiry());
+        values.put("DONE", item.isDone());
+        values.put("FAVOURITE", item.isFavourite());
+        values.put("LAENGENGRAD", item.getLocation().getLatlng().getLat());
+        values.put("BREITENGRAD", item.getLocation().getLatlng().getLng());
+        values.put("LOCATIONNAME", item.getLocation().getName());
+        //TODO add contacts to db
+
+
+        return values;
     }
 }
