@@ -33,8 +33,6 @@ public class ToDoDetailPresenter {
         //First of all let application check if there is a item with the given id.
         //if yes read the item out of the map, if not then use the crudOperations to read from db
 
-        //TODO to discuss, do we always want to read the item from web or not?
-
         final Todo[] returnItem = new Todo[1];
         crudOperations.readToDo(id, new ICRUDOperationsAsync.CallbackFunction<Todo>() {
             @Override
