@@ -6,6 +6,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 
+import com.example.avenger.mad2017retry.model.Todo;
 import com.example.avenger.mad2017retry.presenter.ToDoListPresenter;
 import com.example.avenger.mad2017retry.view.ToDoListAdapter;
 import com.example.avenger.mad2017retry.view.ToDoListView;
@@ -32,8 +33,8 @@ public class ToDoListActivity extends AppCompatActivity implements ToDoListView 
         recyclerViewLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(recyclerViewLayoutManager);
 
-        String[] myStrings = {"test", "test2", "bla","test", "test2", "bla","test", "test2", "bla"};
-        adapter = new ToDoListAdapter(myStrings);
+        Todo[] todos = {new Todo("lorem", "desc"), new Todo("lorema", "ipsuma") };
+        adapter = new ToDoListAdapter(todos);
         recyclerView.setAdapter(adapter);
 
         presenter = new ToDoListPresenter(this);
