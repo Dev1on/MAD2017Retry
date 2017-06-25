@@ -7,25 +7,20 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.EditText;
 
 import com.example.avenger.mad2017retry.database.DBApplication;
-import com.example.avenger.mad2017retry.model.ToDoItem;
 import com.example.avenger.mad2017retry.presenter.ToDoDetailPresenter;
 import com.example.avenger.mad2017retry.view.ToDoDetailView;
-
+import com.example.avenger.mad2017retry.model.Todo;
 
 
 public class ToDoDetailActivity extends AppCompatActivity implements ToDoDetailView {
 
     private ToDoDetailPresenter presenter;
-
-
-    private ToDoItem item;
-
+    private Todo todo;
 
     //TODO load all ui elements
     private EditText nameText;
     private EditText descriptionText;
     private EditText statusText;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,30 +35,22 @@ public class ToDoDetailActivity extends AppCompatActivity implements ToDoDetailV
 
         //set data of ui elements
 
-
         //TODO we will get the id of the item, so we need to read the item from the map or the database
-
-
         long itemId = (long) getIntent().getSerializableExtra("itemId");
-        item = presenter.readToDoItem(itemId);
-        if (item != null) {
-            nameText.setText(item.getName());
-            descriptionText.setText(item.getDescription());
-            statusText.setText("" + item.getStatus());
-
+        todo = presenter.readToDo(itemId);
+        if (todo != null) {
+            nameText.setText(todo.getName());
+            descriptionText.setText(todo.getDescription());
+            statusText.setText("" + todo.isDone());
         }
-
-
     }
 
-
-    //TODO implement methods to save items etc
     @Override
     public void saveItem() {
-        presenter.saveItem(this.item);
+        presenter.saveItem(this.todo);
 
         Intent returnIntent = new Intent();
-        ToDoItem item = new ToDoItem(nameText.getText().toString());
+        Todo item = new Todo(nameText.getText().toString(), descriptionText.getText().toString());
         returnIntent.putExtra("item", item);
 
         setResult(Activity.RESULT_OK, returnIntent);
@@ -84,8 +71,6 @@ public class ToDoDetailActivity extends AppCompatActivity implements ToDoDetailV
     public void createItem() {
 
     }
-
-
 
     @Override
     public void onDestroy() {

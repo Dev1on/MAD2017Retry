@@ -12,10 +12,6 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-/**
- * Created by Avenger on 21.06.17.
- */
-
 public class LoginPresenter {
     private static String WEB_APPLICATION_URL = "http://127.0.0.1:8080/todos";
 

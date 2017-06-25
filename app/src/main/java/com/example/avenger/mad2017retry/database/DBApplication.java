@@ -2,11 +2,6 @@ package com.example.avenger.mad2017retry.database;
 
 import android.app.Application;
 import android.content.Context;
-import android.util.Log;
-
-/**
- * Created by Adi on 24.06.2017.
- */
 
 public class DBApplication extends Application  {
     private static String logger = DBApplication.class.getSimpleName();

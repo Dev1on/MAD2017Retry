@@ -3,7 +3,7 @@ package com.example.avenger.mad2017retry.database;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.example.avenger.mad2017retry.model.ToDoItem;
+import com.example.avenger.mad2017retry.model.Todo;
 
 import java.io.IOException;
 import java.util.List;
@@ -18,10 +18,6 @@ import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
 
-/**
- * Created by Adi on 23.06.2017.
- */
-
 public class RemoteCRUDOperationsImpl implements ICRUDOperationsAsync {
 
     private static String WEB_API_BASE_URL = "http://localhost:8080/";
@@ -29,20 +25,19 @@ public class RemoteCRUDOperationsImpl implements ICRUDOperationsAsync {
     //inner interface to define webapi calls to given remote database application
     public interface ICRUDWebApi {
         @POST("/api/todos")
-        public Call<ToDoItem> createToDoItem(@Body ToDoItem item);
+        Call<Todo > createToDoItem(@Body Todo item);
 
         @GET("/api/todos")
-        public Call<List<ToDoItem>> readAllToDoItems();
+        Call<List<Todo>> readAllToDoItems();
 
         @GET("/api/todos/{id}")
-        public Call<ToDoItem> readToDoItem(@Path("id") long id);
+        Call<Todo> readToDoItem(@Path("id") long id);
 
         @PUT("/api/todos/{id}")
-        public Call<ToDoItem> updateToDoItem(@Path("id") long id, @Body ToDoItem item);
+        Call<Todo> updateToDoItem(@Path("id") long id, @Body Todo item);
 
         @DELETE("/api/todos/{id}")
-        public Call<Boolean> deleteToDoItem(@Path("id") long id);
-
+        Call<Boolean> deleteToDoItem(@Path("id") long id);
     }
 
     private ICRUDWebApi webAPI;
@@ -58,10 +53,10 @@ public class RemoteCRUDOperationsImpl implements ICRUDOperationsAsync {
 
 
     @Override
-    public void createToDo(ToDoItem item, final CallbackFunction<ToDoItem> callback) {
-        new AsyncTask<ToDoItem, Void, ToDoItem>() {
+    public void createToDo(Todo item, final CallbackFunction<Todo> callback) {
+        new AsyncTask<Todo, Void, Todo>() {
             @Override
-            protected ToDoItem doInBackground(ToDoItem... params) {
+            protected Todo doInBackground(Todo... params) {
                 try {
                     return webAPI.createToDoItem(params[0]).execute().body();
                 } catch (IOException e) {
@@ -72,17 +67,17 @@ public class RemoteCRUDOperationsImpl implements ICRUDOperationsAsync {
             }
 
             @Override
-            protected void onPostExecute(ToDoItem toDoItem) {
+            protected void onPostExecute(Todo toDoItem) {
                 callback.process(toDoItem);
             }
         }.execute(item);
     }
 
     @Override
-    public void readAllToDos(final CallbackFunction<List<ToDoItem>> callback) {
-        new AsyncTask<Void, Void, List<ToDoItem>>() {
+    public void readAllToDos(final CallbackFunction<List<Todo>> callback) {
+        new AsyncTask<Void, Void, List<Todo>>() {
             @Override
-            protected List<ToDoItem> doInBackground(Void... params) {
+            protected List<Todo> doInBackground(Void... params) {
                 try {
                     return webAPI.readAllToDoItems().execute().body();
                 } catch (IOException e) {
@@ -93,18 +88,18 @@ public class RemoteCRUDOperationsImpl implements ICRUDOperationsAsync {
             }
 
             @Override
-            protected void onPostExecute(List<ToDoItem> toDoItems) {
+            protected void onPostExecute(List<Todo> toDoItems) {
                 callback.process(toDoItems);
             }
         }.execute();
     }
 
     @Override
-    public void readToDo(long id, final CallbackFunction<ToDoItem> callback) {
-        new AsyncTask<Long, Void, ToDoItem>() {
+    public void readToDo(long id, final CallbackFunction<Todo> callback) {
+        new AsyncTask<Long, Void, Todo>() {
 
             @Override
-            protected ToDoItem doInBackground(Long... params) {
+            protected Todo doInBackground(Long... params) {
                 try {
                     return webAPI.readToDoItem(params[0]).execute().body();
                 } catch (IOException e) {
@@ -115,14 +110,14 @@ public class RemoteCRUDOperationsImpl implements ICRUDOperationsAsync {
             }
 
             @Override
-            protected void onPostExecute(ToDoItem toDoItem) {
+            protected void onPostExecute(Todo toDoItem) {
                 callback.process(toDoItem);
             }
         }.execute(id);
     }
 
     @Override
-    public void updateToDo(long id, ToDoItem item, final CallbackFunction<ToDoItem> callback) {
+    public void updateToDo(long id, Todo item, final CallbackFunction<Todo> callback) {
         //TODO implement remote updateToDo method with asynctask
     }
 
