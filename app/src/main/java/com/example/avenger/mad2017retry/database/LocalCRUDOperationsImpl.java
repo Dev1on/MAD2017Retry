@@ -11,8 +11,6 @@ import com.example.avenger.mad2017retry.model.Todo;
 import java.util.ArrayList;
 import java.util.List;
 
-import retrofit2.http.HEAD;
-
 public class LocalCRUDOperationsImpl implements ICRUDOperationsAsync {
 
     private static final String DB_NAME = "TODOS";
@@ -100,6 +98,7 @@ public class LocalCRUDOperationsImpl implements ICRUDOperationsAsync {
                         //todo.setContacts(contacts);
 
 
+
                         todoList.add(todo);
                         next = cursor.moveToNext();
 
@@ -142,6 +141,7 @@ public class LocalCRUDOperationsImpl implements ICRUDOperationsAsync {
                     } while (next);
                 }
                 return returnItem;
+
             }
 
             @Override
@@ -154,6 +154,7 @@ public class LocalCRUDOperationsImpl implements ICRUDOperationsAsync {
 
     @Override
     public void updateToDo(long id, Todo item, final CallbackFunction<Todo> callback) {
+
         //TODO implement local updateToDo method
 
         new AsyncTask<Long, Void, Todo>() {
