@@ -40,8 +40,6 @@ public class LocalCRUDOperationsImpl implements ICRUDOperationsAsync {
                 long id = db.insertOrThrow(DB_NAME, null, values);
                 item.setId((int) id);
 
-                Log.i("LocalCRUD","id is: " + id + " and name is: " + item.getName());
-
                 return item;
             }
 
@@ -93,9 +91,7 @@ public class LocalCRUDOperationsImpl implements ICRUDOperationsAsync {
                     cursor.moveToFirst();
                     boolean next = false;
                     do {
-                        Log.i("LocalCRUD","id is in schleife: " + cursor.getLong(cursor.getColumnIndex("ID")) + " and search id is: " + id);
                         if (cursor.getLong(cursor.getColumnIndex("ID")) == id) {
-                            Log.i("LocalCRUD","Found item!");
                             returnItem = setTodoFromDB(cursor);
                             break;
                         }

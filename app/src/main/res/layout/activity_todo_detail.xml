@@ -24,19 +24,23 @@
         android:inputType="textPersonName"
         android:text="Description" />
 
-    <EditText
-        android:id="@+id/statusTextDetail"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:text="Status" />
+        android:orientation="horizontal">
 
-    <CheckBox
-        android:id="@+id/favourite"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Favourite" />
+        <CheckBox
+            android:id="@+id/favouriteBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Favourite" />
+
+        <CheckBox
+            android:id="@+id/doneBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Done" />
+    </LinearLayout>
 
     <EditText
         android:id="@+id/contactText"
@@ -46,12 +50,6 @@
         android:inputType="textMultiLine"
         android:text="contacts" />
 
-    <com.google.android.gms.maps.MapView
-        android:id="@+id/mapView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="visible" />
-
     <EditText
         android:id="@+id/locationText"
         android:layout_width="match_parent"
@@ -59,6 +57,12 @@
         android:ems="10"
         android:inputType="textPersonName"
         android:text="Location Name" />
+
+    <com.google.android.gms.maps.MapView
+        android:id="@+id/mapView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="visible" />
 
 
 </LinearLayout>

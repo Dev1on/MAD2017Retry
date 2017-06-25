@@ -1,17 +1,14 @@
 package com.example.avenger.mad2017retry.presenter;
 
-import android.util.Log;
-
 import com.example.avenger.mad2017retry.database.DBApplication;
 import com.example.avenger.mad2017retry.database.ICRUDOperationsAsync;
-import com.example.avenger.mad2017retry.view.ToDoDetailView;
 import com.example.avenger.mad2017retry.model.Todo;
+import com.example.avenger.mad2017retry.view.ToDoDetailView;
 
 import static android.R.attr.id;
 
 public class ToDoDetailPresenter {
 
-    // TODO use
     private ToDoDetailView toDoDetailView;
 
     private ICRUDOperationsAsync crudOperations;
@@ -20,8 +17,6 @@ public class ToDoDetailPresenter {
 
     public ToDoDetailPresenter(ToDoDetailView aToDoDetailView, DBApplication application) {
         this.toDoDetailView = aToDoDetailView;
-
-        //getting the application scoped DBApplication
         crudOperations = application.getCrudOperations();
     }
 

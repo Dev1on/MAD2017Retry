@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.widget.CheckBox;
 import android.widget.EditText;
 
 import com.example.avenger.mad2017retry.database.DBApplication;
@@ -21,7 +22,10 @@ public class ToDoDetailActivity extends AppCompatActivity implements ToDoDetailV
     //TODO load all ui elements
     private EditText nameText;
     private EditText descriptionText;
-    private EditText statusText;
+    private CheckBox favouriteBox;
+    private CheckBox doneBox;
+    private EditText contactText;
+    private EditText locationText;
 
     private ProgressDialog progressDialog;
 
@@ -34,7 +38,10 @@ public class ToDoDetailActivity extends AppCompatActivity implements ToDoDetailV
         //get all ui elements
         nameText = (EditText) findViewById(R.id.nameTextDetail);
         descriptionText = (EditText) findViewById(R.id.descriptionTextDetail);
-        statusText = (EditText) findViewById(R.id.statusTextDetail);
+        favouriteBox = (CheckBox) findViewById(R.id.favouriteBox);
+        doneBox = (CheckBox) findViewById(R.id.doneBox);
+        contactText = (EditText) findViewById(R.id.contactText);
+        locationText = (EditText) findViewById(R.id.locationText);
 
         progressDialog = new ProgressDialog(this);
 
@@ -69,11 +76,12 @@ public class ToDoDetailActivity extends AppCompatActivity implements ToDoDetailV
     public void setTodoView(Todo todo) {
         nameText.setText(todo.getName());
         descriptionText.setText(todo.getDescription());
-        statusText.setText("" + todo.isDone());
+        favouriteBox.setChecked(todo.isFavourite());
+        doneBox.setChecked(todo.isDone());
+        //contactText.setText(todo.getContacts());
+        locationText.setText(todo.getLocation().getName());
 
-        //TODO add all views
-
-        progressDialog.hide();
+        progressDialog.dismiss();
     }
 
     @Override
