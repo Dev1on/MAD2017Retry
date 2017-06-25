@@ -1,51 +1,28 @@
 package com.example.avenger.mad2017retry.model;
 
 import java.io.Serializable;
-import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
-
-//class of joern kreutel
 
 public class Todo implements Serializable {
 
-    /**
-     *
-     */
     private static final long serialVersionUID = -6410064189686738560L;
 
-    /**
-     *
-     */
-
-    // the id
     private long id;
 
-    // name and decription
     private String name;
     private String description;
 
-    // expirydate as long value
     private long expiry;
-
-    // whether the todo is done
     private boolean done;
-
-    // whether it is a favourite
     private boolean favourite;
-
-    // a list of contacts with whom the item is associated - for allowing various solutions how contacts may be represented, we foresee an array of strings
+    // TODO implement real contact (create new model class + think about representation)
     private List<String> contacts;
-
-    // a geolocation
     private Location location;
 
-
-
-
-
-
-
+    public Todo(String name, String description) {
+        this.name = name;
+        this.description = description;
+    }
 
     public Location getLocation() {
         return location;
@@ -61,15 +38,6 @@ public class Todo implements Serializable {
 
     public void setContacts(List<String> contacts) {
         this.contacts = contacts;
-    }
-
-    public Todo(String name, String description) {
-        this.name = name;
-        this.description = description;
-    }
-
-    // a default constructor
-    public Todo() {
     }
 
     public long getId() {
@@ -96,15 +64,6 @@ public class Todo implements Serializable {
         this.description = description;
     }
 
-    public boolean equals(Object other) {
-        return this.getId() == ((Todo) other).getId();
-    }
-
-    public String toString() {
-        return "{Todo " + this.id + " " + this.name + ", " + this.description + this.expiry
-                + "}";
-    }
-
     public long getExpiry() {
         return expiry;
     }
@@ -129,9 +88,43 @@ public class Todo implements Serializable {
         this.favourite = favourite;
     }
 
-    /*
-     * an inner class for representing a geolocation
-     */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Todo todo = (Todo) o;
+
+        if (id != todo.id) return false;
+        if (expiry != todo.expiry) return false;
+        if (done != todo.done) return false;
+        if (favourite != todo.favourite) return false;
+        if (name != null ? !name.equals(todo.name) : todo.name != null) return false;
+        if (description != null ? !description.equals(todo.description) : todo.description != null)
+            return false;
+        if (contacts != null ? !contacts.equals(todo.contacts) : todo.contacts != null)
+            return false;
+        return location != null ? location.equals(todo.location) : todo.location == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = (int) (id ^ (id >>> 32));
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (description != null ? description.hashCode() : 0);
+        result = 31 * result + (int) (expiry ^ (expiry >>> 32));
+        result = 31 * result + (done ? 1 : 0);
+        result = 31 * result + (favourite ? 1 : 0);
+        result = 31 * result + (contacts != null ? contacts.hashCode() : 0);
+        result = 31 * result + (location != null ? location.hashCode() : 0);
+        return result;
+    }
+
+    public String toString() {
+        return "{Todo " + this.id + " " + this.name + ", " + this.description + this.expiry
+                + "}";
+    }
+
     public static class LatLng implements Serializable {
 
         private double lat;
@@ -194,8 +187,5 @@ public class Todo implements Serializable {
         public void setName(String name) {
             this.name = name;
         }
-
-
     }
-
 }

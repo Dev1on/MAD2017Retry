@@ -5,8 +5,6 @@ package com.example.avenger.mad2017retry.view;
  */
 
 public interface ToDoDetailView {
-
-    //use of CRUD operations
     void saveItem();
 
     void deleteItem();
@@ -14,5 +12,4 @@ public interface ToDoDetailView {
     void readItem();
 
     void createItem();
-
 }

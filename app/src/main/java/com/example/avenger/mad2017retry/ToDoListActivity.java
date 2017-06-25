@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
 
 import com.example.avenger.mad2017retry.presenter.ToDoListPresenter;
 import com.example.avenger.mad2017retry.view.ToDoListView;

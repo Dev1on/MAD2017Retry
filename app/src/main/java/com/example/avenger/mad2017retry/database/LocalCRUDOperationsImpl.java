@@ -6,15 +6,12 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 
-import com.example.avenger.mad2017retry.model.ToDoItem;
 import com.example.avenger.mad2017retry.model.Todo;
 
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Adi on 23.06.2017.
- */
+import retrofit2.http.HEAD;
 
 public class LocalCRUDOperationsImpl implements ICRUDOperationsAsync {
 
@@ -35,10 +32,10 @@ public class LocalCRUDOperationsImpl implements ICRUDOperationsAsync {
     }
 
     @Override
-    public void createToDo(final ToDoItem item, final CallbackFunction<ToDoItem> callback) {
-        new AsyncTask<ToDoItem, Void, ToDoItem>() {
+    public void createToDo(final Todo item, final CallbackFunction<Todo> callback) {
+        new AsyncTask<Todo, Void, Todo>() {
             @Override
-            protected ToDoItem doInBackground(ToDoItem... params) {
+            protected Todo doInBackground(Todo... params) {
                 ContentValues values = new ContentValues();
                 values.put("NAME", item.getName());
                 values.put("DESCRIPTION", item.getDescription());
@@ -57,25 +54,25 @@ public class LocalCRUDOperationsImpl implements ICRUDOperationsAsync {
             }
 
             @Override
-            protected void onPostExecute(ToDoItem toDoItem) {
+            protected void onPostExecute(Todo toDoItem) {
                 callback.process(toDoItem);
             }
         }.execute(item);
     }
 
     @Override
-    public void readAllToDos(final CallbackFunction<List<ToDoItem>> callback) {
-        new AsyncTask<Void, Void, List<ToDoItem>>() {
+    public void readAllToDos(final CallbackFunction<List<Todo>> callback) {
+        new AsyncTask<Void, Void, List<Todo>>() {
             @Override
-            protected List<ToDoItem> doInBackground(Void... params) {
-                List<ToDoItem> items = new ArrayList<ToDoItem>();
+            protected List<Todo> doInBackground(Void... params) {
+                List<Todo> todoList = new ArrayList<>();
 
                 Cursor cursor = db.query(DB_NAME, new String[]{"ID", "NAME", "DESCRIPTION", "EXPIRY", "DONE", "FAVOURITE", "LAENGENGRAD", "BREITENGRAD"},null,null,null,null,"ID");
                 if(cursor.getCount() > 0) {
                     cursor.moveToFirst();
-                    boolean next = false;
+                    boolean next;
                     do {
-                        ToDoItem item = new ToDoItem("Name");
+                        Todo todo = new Todo("Name", "Description");
 
                         long id = cursor.getLong(cursor.getColumnIndex("ID"));
                         String name = cursor.getString(cursor.getColumnIndex("NAME"));
@@ -93,26 +90,27 @@ public class LocalCRUDOperationsImpl implements ICRUDOperationsAsync {
                         List<String> contacts = new ArrayList<String>();
 
 
-                        item.setId((int) id);
-                        item.setName(name);
-                        item.setDescription(description);
-                        //item.setExpiry(expiry);
-                        //item.setDone(done);
-                        //item.setFavourite(favourite);
-                        //item.setLocation(location);
-                        //item.setContacts(contacts);
+                        todo.setId((int) id);
+                        todo.setName(name);
+                        todo.setDescription(description);
+                        //todo.setExpiry(expiry);
+                        //todo.setDone(done);
+                        //todo.setFavourite(favourite);
+                        //todo.setLocation(location);
+                        //todo.setContacts(contacts);
 
-                        items.add(item);
+
+                        todoList.add(todo);
                         next = cursor.moveToNext();
 
                     } while (next);
-
                 }
-                return items;
+                cursor.close();
+                return todoList;
             }
 
             @Override
-            protected void onPostExecute(List<ToDoItem> toDoItems) {
+            protected void onPostExecute(List<Todo> toDoItems) {
                 callback.process(toDoItems);
             }
         }.execute();
@@ -120,12 +118,12 @@ public class LocalCRUDOperationsImpl implements ICRUDOperationsAsync {
     }
 
     @Override
-    public void readToDo(final long id, final CallbackFunction<ToDoItem> callback) {
-        new AsyncTask<Long, Void, ToDoItem>() {
+    public void readToDo(final long id, final CallbackFunction<Todo> callback) {
+        new AsyncTask<Long, Void, Todo>() {
             @Override
-            protected ToDoItem doInBackground(Long... params) {
+            protected Todo doInBackground(Long... params) {
                 Cursor cursor = db.query(DB_NAME, new String[]{"ID", "NAME", "DESCRIPTION", "EXPIRY", "DONE", "FAVOURITE", "LAENGENGRAD", "BREITENGRAD"},null,null,null,null,"ID");
-                ToDoItem returnItem = new ToDoItem("Name");
+                Todo returnItem = new Todo("Name", "Description");
                 if(cursor.getCount() > 0) {
                     cursor.moveToFirst();
                     boolean next = false;
@@ -147,20 +145,20 @@ public class LocalCRUDOperationsImpl implements ICRUDOperationsAsync {
             }
 
             @Override
-            protected void onPostExecute(ToDoItem toDoItem) {
-                callback.process(toDoItem);
+            protected void onPostExecute(Todo todo) {
+                callback.process(todo);
             }
         }.execute(id);
 
     }
 
     @Override
-    public void updateToDo(long id, ToDoItem item, final CallbackFunction<ToDoItem> callback) {
+    public void updateToDo(long id, Todo item, final CallbackFunction<Todo> callback) {
         //TODO implement local updateToDo method
 
-        new AsyncTask<Long, Void, ToDoItem>() {
+        new AsyncTask<Long, Void, Todo>() {
             @Override
-            protected ToDoItem doInBackground(Long... params) {
+            protected Todo doInBackground(Long... params) {
 
                 //int rowsAffected = db.update(DB_NAME, values, "ID=?", new String[]{String.valueOf(id)} );
 
@@ -168,7 +166,7 @@ public class LocalCRUDOperationsImpl implements ICRUDOperationsAsync {
             }
 
             @Override
-            protected void onPostExecute(ToDoItem toDoItem) {
+            protected void onPostExecute(Todo toDoItem) {
                 callback.process(toDoItem);
             }
         }.execute(id);
