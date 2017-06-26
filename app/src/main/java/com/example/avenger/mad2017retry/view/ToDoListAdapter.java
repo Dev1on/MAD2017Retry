@@ -39,6 +39,7 @@ public class ToDoListAdapter extends RecyclerView.Adapter<ToDoListAdapter.ViewHo
             Context context = itemView.getContext();
             Intent showTodoDetails = new Intent(context, ToDoDetailActivity.class);
             showTodoDetails.putExtra("id", id+1);
+            showTodoDetails.putExtra("createItem", false);
             context.startActivity(showTodoDetails);
         }
     }
