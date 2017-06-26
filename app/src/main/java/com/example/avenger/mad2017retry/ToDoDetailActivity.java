@@ -4,8 +4,10 @@ import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -47,6 +49,7 @@ public class ToDoDetailActivity extends AppCompatActivity implements ToDoDetailV
 
     private ProgressDialog progressDialog;
     private Toolbar toolbar;
+    private AlertDialog.Builder alertDialogBuilder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +73,7 @@ public class ToDoDetailActivity extends AppCompatActivity implements ToDoDetailV
 
         setSupportActionBar(toolbar);
         setCalender();
+        setConfirmAlert();
 
         boolean createItem = (boolean) getIntent().getSerializableExtra("createItem");
 
@@ -144,7 +148,7 @@ public class ToDoDetailActivity extends AppCompatActivity implements ToDoDetailV
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_delete) {
-            deleteItem();
+            alertDialogBuilder.show();
             return true;
         } else if(item.getItemId() == R.id.action_save) {
             saveItem();
@@ -246,6 +250,23 @@ public class ToDoDetailActivity extends AppCompatActivity implements ToDoDetailV
     private void updateTimeLabel(Calendar cal) {
         SimpleDateFormat sdf = new SimpleDateFormat(HH_MM);
         timeText.setText(sdf.format(cal.getTime()));
+    }
+
+    private void setConfirmAlert() {
+        DialogInterface.OnClickListener dialogClickListener = (dialog, which) -> {
+            switch (which){
+                case DialogInterface.BUTTON_POSITIVE:
+                    deleteItem();
+                    break;
+
+                case DialogInterface.BUTTON_NEGATIVE:
+                    //Do nothing
+                    break;
+            }
+        };
+        alertDialogBuilder = new AlertDialog.Builder(ToDoDetailActivity.this);
+        alertDialogBuilder.setMessage("Are you sure?").setPositiveButton("Yes", dialogClickListener)
+                .setNegativeButton("No", dialogClickListener);
     }
 
 }
