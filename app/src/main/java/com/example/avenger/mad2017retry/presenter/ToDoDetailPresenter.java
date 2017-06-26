@@ -31,12 +31,20 @@ public class ToDoDetailPresenter {
         });
     }
 
+    public void createItem() {
+        Todo newTodo = toDoDetailView.getCurrentTodo();
+        crudOperations.createToDo(newTodo, result -> {
+            setTodo(result);
+            toDoDetailView.setTodoView(result);
+        });
+    }
+
     public void readToDo(long id) {
         //First of all let application check if there is a item with the given id.
         //if yes read the item out of the map, if not then use the crudOperations to read from db
 
         crudOperations.readToDo(id, result -> {
-            Log.i("detailpresenter", "Reuslt is: " + result);
+            Log.i("detailpresenter", "Result is: " + result);
 
             if(result.getId() == 0) {
                 toDoDetailView.displayTodoNotFound();
