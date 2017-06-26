@@ -29,6 +29,8 @@ public class DBApplication extends Application  {
         String localOrRemote = "local";
         if (localOrRemote.equals("remote")) {
             this.crudOperations = new RemoteCRUDOperationsImpl();
+
+
         } else if (localOrRemote.equals("local")) {
             Context context = this.getApplicationContext();
             this.crudOperations = new LocalCRUDOperationsImpl(context);

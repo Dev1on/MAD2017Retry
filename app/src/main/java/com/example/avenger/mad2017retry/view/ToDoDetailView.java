@@ -13,8 +13,6 @@ public interface ToDoDetailView {
 
     void setTodoView(Todo todo);
 
-    void createItem();
-
     Todo getCurrentTodo();
 
     void displayTodoNotFound();

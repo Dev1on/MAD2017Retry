@@ -4,13 +4,10 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -55,26 +52,40 @@ public class ToDoDetailActivity extends AppCompatActivity implements ToDoDetailV
 
         setSupportActionBar(toolbar);
 
+        boolean createItem = (boolean) getIntent().getSerializableExtra("createItem");
 
-
-
-        initializeScreen();
+        if (createItem)
+            initializeEmpty();
+        else
+            initializeScreenWithTodo();
     }
 
-    private void initializeScreen() {
+    private void initializeEmpty() {
+        Todo todo = new Todo("","");
+        setTodoView(todo);
+    }
+
+    private void initializeScreenWithTodo() {
         progressDialog.show();
         long itemId = (long) getIntent().getSerializableExtra("id");
-        presenter.readToDo(itemId);
 
+        presenter.readToDo(itemId);
+        progressDialog.hide();
     }
 
 
     @Override
     public void saveItem() {
-        progressDialog.show();
-        presenter.saveItem();
-        progressDialog.dismiss();
+        boolean createItem = (boolean) getIntent().getSerializableExtra("createItem");
 
+        if (!createItem) {
+            progressDialog.show();
+            presenter.saveItem();
+        } else {
+            presenter.createItem();
+        }
+
+        progressDialog.dismiss();
         Toast.makeText(this, "Todo saved", Toast.LENGTH_SHORT).show();
     }
 
@@ -101,10 +112,6 @@ public class ToDoDetailActivity extends AppCompatActivity implements ToDoDetailV
         progressDialog.dismiss();
     }
 
-    @Override
-    public void createItem() {
-
-    }
 
     @Override
     public void onDestroy() {
