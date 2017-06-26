@@ -1,5 +1,7 @@
 package com.example.avenger.mad2017retry.view;
 
+import com.example.avenger.mad2017retry.model.Todo;
+
 /**
  * Created by Avenger on 21.06.17.
  */
@@ -9,7 +11,11 @@ public interface ToDoDetailView {
 
     void deleteItem();
 
-    void readItem();
+    void setTodoView(Todo todo);
 
     void createItem();
+
+    Todo getCurrentTodo();
+
+    void displayTodoNotFound();
 }
