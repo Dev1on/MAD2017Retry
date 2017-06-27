@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 
+import com.example.avenger.mad2017retry.database.DBApplication;
 import com.example.avenger.mad2017retry.presenter.LoginPresenter;
 import com.example.avenger.mad2017retry.view.LoginView;
 
@@ -47,12 +48,10 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
                     presenter.validateCredentials(email.getText().toString(), password.getText().toString());
                 }
             });
-
-            // TODO set ExternalDatabaseManager
+            ((DBApplication)getApplication()).setCRUDOperations("remote");
         } else {
             // TODO show Toast WebApp unavailable
-            // TODO set LocalDatabaseManager
-
+            ((DBApplication)getApplication()).setCRUDOperations("local");
             // skip login
             navigateToHome();
         }
