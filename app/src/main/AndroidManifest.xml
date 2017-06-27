@@ -31,5 +31,4 @@
             android:label="To Do Detail"
             android:theme="@style/AppTheme.NoActionBar" />
     </application>
-
 </manifest>

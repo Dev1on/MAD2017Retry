@@ -131,7 +131,6 @@ public class ToDoDetailActivity extends AppCompatActivity implements ToDoDetailV
         progressDialog.dismiss();
     }
 
-
     @Override
     public void onDestroy() {
         presenter.onDestroy();

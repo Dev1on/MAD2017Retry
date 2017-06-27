@@ -134,9 +134,7 @@ public class LocalCRUDOperationsImpl implements ICRUDOperationsAsync {
             @Override
             protected Boolean doInBackground(Long... params) {
                 int rowsAffected = db.delete(DB_NAME, "ID=?", new String[]{String.valueOf(id)});
-                if (rowsAffected > 0)
-                    return true;
-                return false;
+                return rowsAffected > 0;
             }
 
             @Override
@@ -152,8 +150,8 @@ public class LocalCRUDOperationsImpl implements ICRUDOperationsAsync {
         String name = cursor.getString(cursor.getColumnIndex("NAME"));
         String description = cursor.getString(cursor.getColumnIndex("DESCRIPTION"));
         long expiry = cursor.getLong(cursor.getColumnIndex("EXPIRY"));
-        boolean done = (cursor.getInt(cursor.getColumnIndex("DONE")))== 1 ? true : false;
-        boolean favourite = (cursor.getInt(cursor.getColumnIndex("FAVOURITE")))== 1 ? true : false;
+        boolean done = (cursor.getInt(cursor.getColumnIndex("DONE"))) == 1;
+        boolean favourite = (cursor.getInt(cursor.getColumnIndex("FAVOURITE"))) == 1;
         long lat = cursor.getLong(cursor.getColumnIndex("LAENGENGRAD"));
         long lng = cursor.getLong(cursor.getColumnIndex("BREITENGRAD"));
         String location_name = cursor.getString(cursor.getColumnIndex("LOCATIONNAME"));

@@ -44,7 +44,7 @@ public class ToDoDetailPresenter {
         //if yes read the item out of the map, if not then use the crudOperations to read from db
 
         crudOperations.readToDo(id, result -> {
-            Log.i("detailpresenter", "Result is: " + result);
+            Log.i("detailpresenter", "Reuslt is: " + result);
 
             if(result.getId() == 0) {
                 toDoDetailView.displayTodoNotFound();

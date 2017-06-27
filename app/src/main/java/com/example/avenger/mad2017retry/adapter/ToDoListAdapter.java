@@ -1,4 +1,4 @@
-package com.example.avenger.mad2017retry.view;
+package com.example.avenger.mad2017retry.adapter;
 
 import android.content.Context;
 import android.content.Intent;
@@ -13,29 +13,34 @@ import android.widget.TextView;
 
 import com.example.avenger.mad2017retry.R;
 import com.example.avenger.mad2017retry.ToDoDetailActivity;
-import com.example.avenger.mad2017retry.ToDoListActivity;
 import com.example.avenger.mad2017retry.model.Todo;
 
 public class ToDoListAdapter extends RecyclerView.Adapter<ToDoListAdapter.ViewHolder> {
 
-    private Todo[] dataset;
+    private Context context;
+    private Todo[] todos;
 
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        public LinearLayout linearLayout;
+        public LinearLayout todoContainer;
         public long id;
         public TextView name;
+        public CheckBox done;
+        public CheckBox favourite;
+        public TextView expiry;
 
         public ViewHolder(View v) {
             super(v);
-            linearLayout = (LinearLayout) v.findViewById(R.id.textViewLinearLayout);
+            todoContainer = (LinearLayout) v.findViewById(R.id.message_container);
             name = (TextView) v.findViewById(R.id.todo_name);
+            expiry = (TextView) v.findViewById(R.id.todo_expiry);
+            done = (CheckBox) v.findViewById(R.id.todo_done);
+            favourite = (CheckBox) v.findViewById(R.id.todo_favourite);
             v.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View v) {
-            Log.i("onclick", "not working");
             Context context = itemView.getContext();
             Intent showTodoDetails = new Intent(context, ToDoDetailActivity.class);
             showTodoDetails.putExtra("id", id+1);
@@ -44,26 +49,31 @@ public class ToDoListAdapter extends RecyclerView.Adapter<ToDoListAdapter.ViewHo
         }
     }
 
-    public ToDoListAdapter(Todo[] aDataset) {
-        dataset= aDataset;
+    public ToDoListAdapter(Context context, Todo[] aDataset) {
+        context = context;
+        todos = aDataset;
     }
 
     @Override
     public ToDoListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.my_text_view, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.todo_list_row, parent, false);
 
-        ViewHolder vh = new ViewHolder(v);
-        return vh;
+        return new ViewHolder(v);
     }
 
     @Override
     public void onBindViewHolder(ToDoListAdapter.ViewHolder holder, int position) {
-        holder.id = dataset[position].getId();
-        holder.name.setText(dataset[position].getName());
+        Todo todo = todos[position];
+
+        holder.id = todo.getId();
+        holder.name.setText(todo.getName());
+        holder.expiry.setText(String.valueOf(todo.getExpiry()));
+        holder.done.setChecked(todo.isDone());
+        holder.favourite.setChecked(todo.isFavourite());
     }
 
     @Override
     public int getItemCount() {
-        return dataset.length;
+        return todos.length;
     }
 }
