@@ -208,6 +208,12 @@ public class ToDoDetailActivity extends AppCompatActivity implements ToDoDetailV
 
     private void initializeEmpty() {
         Todo todo = new Todo("","");
+        Todo.Location newLoc = new Todo.Location();
+        Todo.LatLng newLatlng = new Todo.LatLng(0,0);
+        newLoc.setName("");
+        newLoc.setLatlng(newLatlng);
+        todo.setLocation(newLoc);
+
         setTodoView(todo);
     }
 
